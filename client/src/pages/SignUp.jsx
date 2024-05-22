@@ -104,11 +104,6 @@ const SignUp = () => {
                   </Link>
                 </p>
               </form>
-              <div className="flex items-center justify-center my-4">
-                <div className="border-t border-gray-300 flex-grow"></div>
-                <span className="mx-4 text-gray-500">or</span>
-                <div className="border-t border-gray-300 flex-grow"></div>
-              </div>
             </div>
           </div>
         </div>
