@@ -10,7 +10,12 @@ const Dashboard = () => {
   async function getCourses() {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_APP_ENDPOINT}/user/getCourses`
+        `${import.meta.env.VITE_APP_ENDPOINT}/user/getCourses`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       setCourse(res.data.courses);
     } catch (error) {

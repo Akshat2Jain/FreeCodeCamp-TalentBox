@@ -7,7 +7,7 @@ async function userMiddleware(req, res, next) {
       const words = token.split(" ");
       const jwtToken = words[1];
       const decode = jwt.verify(jwtToken, JWT_SECRET);
-      if (decode._id) {
+      if (decode.email) {
         next();
       } else {
         return res.status(403).json({ msg: "You are not authorized" });

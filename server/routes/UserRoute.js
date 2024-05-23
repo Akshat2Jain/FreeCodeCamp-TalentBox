@@ -11,6 +11,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 //signUp
 router.post("/signUp", async function (req, res) {
   try {
+    console.log(req.body);
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
@@ -36,6 +37,30 @@ router.post("/signUp", async function (req, res) {
   }
 });
 
+//google Sign Up
+router.post("/googleSignUp", async function (req, res) {
+  try {
+    const email = req.body.email;
+    const username = req.body.username;
+    const token = jwt.sign({ email: email }, JWT_SECRET);
+    const userexits = await User.findOne({ email: email });
+    if (userexits) {
+      return res.status(200).json({ token });
+    }
+    const response = await User.create({
+      email: email,
+      username: username,
+    });
+    console.log(response);
+    res.status(200).json({ msg: "Login Successfully", token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Something Went Wrong",
+    });
+  }
+});
+
 //signIn
 router.post("/signIn", async function (req, res) {
   try {
@@ -49,11 +74,14 @@ router.post("/signIn", async function (req, res) {
     if (!user) {
       return res.status(403).json({ msg: "User not found with this email" });
     }
+    if (!user.password) {
+      return res.status(411).json({ msg: "Please Sign In with Google" });
+    }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(403).json({ msg: "Wrong Password" });
     }
-    const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+    const token = jwt.sign({ email: user.email }, JWT_SECRET);
     res.status(200).json({ msg: "Login Succesfully", token: token, user });
   } catch (error) {
     console.log(error);
@@ -62,7 +90,7 @@ router.post("/signIn", async function (req, res) {
 });
 
 // getcourse
-router.get("/getCourses", async function (req, res) {
+router.get("/getCourses", userMiddleware, async function (req, res) {
   try {
     const courses = await Course.find({});
     res.status(200).json({ courses });

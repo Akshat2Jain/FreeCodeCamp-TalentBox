@@ -5,12 +5,14 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import logo from "../assets/images.jpg";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
+import { googleLogout } from "@react-oauth/google";
 
 const UserNavbar = () => {
   const navigate = useNavigate();
   async function handleLogout(e) {
     e.preventDefault();
     localStorage.clear();
+    googleLogout();
     message.success("Logout Succesfully");
     navigate("/");
   }

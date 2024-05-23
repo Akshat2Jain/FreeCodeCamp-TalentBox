@@ -40,7 +40,14 @@ const SignIn = () => {
             },
           }
         );
-        const token = res.data.id;
+        const res2 = await axios.post(
+          `${import.meta.env.VITE_APP_ENDPOINT}/user/googleSignUp`,
+          {
+            username: res.data.name,
+            email: res.data.email,
+          }
+        );
+        const token = res2.data.token;
         localStorage.setItem("token", token);
         navigate("/dashboard");
       } catch (error) {
